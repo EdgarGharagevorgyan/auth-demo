@@ -5,7 +5,7 @@ import { useAuth } from '../../lib/useAuth';
 
 export default function Login() {
     const { login } = useAuth();
-    const r = useRouter();
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [pw, setPw] = useState('');
     const [busy, setBusy] = useState(false);
@@ -15,7 +15,7 @@ export default function Login() {
         setBusy(true);
         try {
             await login(email.trim(), pw);
-            r.replace('/(protected)/home');
+            router.replace('/(protected)/home');
         } catch (e: any) {
             Alert.alert('Login failed', e?.message ?? 'Unknown error');
         } finally {

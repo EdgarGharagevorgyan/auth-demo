@@ -4,7 +4,7 @@
     "name": "auth-demo",
     "slug": "auth-demo",
     "extra": {
-      "API_URL": "http://10.0.2.2:3000"
+      "API_URL": "http://10.0.2.2:4000"
     },
     "version": "1.0.0",
     "orientation": "portrait",

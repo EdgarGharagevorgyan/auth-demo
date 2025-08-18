@@ -1,7 +1,7 @@
-// lib/useAuth.tsx
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { api } from './api';
 import { getToken, setToken, clearToken } from './auth';
+import { ENV } from "../config/env";
 
 type AuthCtx = {
     token: string | null;
@@ -9,6 +9,8 @@ type AuthCtx = {
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
 };
+
+type LoginRes = { token: string; user: { id: string; email: string } };
 
 const Ctx = createContext<AuthCtx | null>(null);
 
@@ -21,8 +23,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
     }, []);
 
+    console.log('API_URL =', ENV.API_URL);
+
     async function login(email: string, password: string) {
-        const res = await api('/login', { method: 'POST', body: { email, password } });
+        const res = await api('/api/auth/login', {
+            method: 'POST',
+            body: { email, password },
+        }) as LoginRes;
+
         if (!res?.token) throw new Error('No token returned');
         setToken(res.token);
         setTok(res.token);

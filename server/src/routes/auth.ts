@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
-    return res.json({ accessToken, refreshToken, user: { id: user.id, email: user.email } });
+    return res.json({ token: accessToken, accessToken, refreshToken, user: { id: user.id, email: user.email } });
   } catch (err: any) {
     if (err instanceof ZodError) {
       return res.status(400).json({ error: 'Invalid input', details: err.issues });

@@ -8,6 +8,9 @@ type Opts = {
 };
 
 export async function api(path: string, opts: Opts = {}) {
+    const base = ENV.API_URL.replace(/\/+$/, "");
+    const fullUrl = `${base}${path.startsWith("/") ? path : `/${path}`}`;
+
     const token = getToken();
     const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -15,7 +18,9 @@ export async function api(path: string, opts: Opts = {}) {
     };
     if (token) headers.Authorization = `Bearer ${token}`;
 
-    const res = await fetch(`${ENV.API_URL}${path}`, {
+    console.log("API →", opts.method ?? "GET", fullUrl);
+
+    const res = await fetch(fullUrl, {
         method: opts.method ?? "GET",
         headers,
         body: opts.body ? JSON.stringify(opts.body) : undefined,
