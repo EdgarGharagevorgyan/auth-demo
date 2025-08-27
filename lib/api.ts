@@ -20,6 +20,8 @@ export async function api(path: string, opts: Opts = {}) {
 
     console.log("API →", opts.method ?? "GET", fullUrl);
 
+    console.log('API_URL =', ENV.API_URL, '→ calling', `${ENV.API_URL}${path}`);
+
     const res = await fetch(fullUrl, {
         method: opts.method ?? "GET",
         headers,

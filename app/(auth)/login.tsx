@@ -3,23 +3,23 @@ import { View, Text, TextInput, Pressable, ActivityIndicator, Alert } from 'reac
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../lib/useAuth';
 
-export default function Login() {
+export default function LoginScreen() {
     const { login } = useAuth();
     const router = useRouter();
     const [email, setEmail] = useState('');
-    const [pw, setPw] = useState('');
-    const [busy, setBusy] = useState(false);
+    const [password, setPassword] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    async function onSubmit() {
-        if (!email || !pw) return Alert.alert('Error', 'Email and password are required');
-        setBusy(true);
+    async function handleLogin() {
+        if (!email || !password) return Alert.alert('Error', 'Email and password are required');
+        setIsSubmitting(true);
         try {
-            await login(email.trim(), pw);
+            await login(email.trim(), password);
             router.replace('/(protected)/home');
-        } catch (e: any) {
-            Alert.alert('Login failed', e?.message ?? 'Unknown error');
+        } catch (error: any) {
+            Alert.alert('Login failed', error?.message ?? 'Unknown error');
         } finally {
-            setBusy(false);
+            setIsSubmitting(false);
         }
     }
 
@@ -32,29 +32,40 @@ export default function Login() {
                 onChangeText={setEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
-                placeholder="email"
+                placeholder="Email"
                 style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
             />
             <TextInput
-                value={pw}
-                onChangeText={setPw}
+                value={password}
+                onChangeText={setPassword}
                 secureTextEntry
-                placeholder="password"
+                placeholder="Password"
                 style={{ borderWidth: 1, borderRadius: 8, padding: 12 }}
             />
 
             <Pressable
-                onPress={onSubmit}
-                disabled={busy}
+                onPress={handleLogin}
+                disabled={isSubmitting}
                 style={{
                     backgroundColor: '#111827',
                     padding: 14,
                     borderRadius: 10,
                     alignItems: 'center',
-                    opacity: busy ? 0.7 : 1,
+                    opacity: isSubmitting ? 0.7 : 1,
                 }}
             >
-                {busy ? <ActivityIndicator /> : <Text style={{ color: 'white', fontWeight: '600' }}>Login</Text>}
+                {isSubmitting ? (
+                    <ActivityIndicator />
+                ) : (
+                    <Text style={{ color: 'white', fontWeight: '600' }}>Login</Text>
+                )}
+            </Pressable>
+
+            <Pressable
+                onPress={() => router.replace('/(auth)/register')}
+                style={{ alignItems: 'center', paddingTop: 8 }}
+            >
+                <Text style={{ textDecorationLine: 'underline' }}>Create an account</Text>
             </Pressable>
         </View>
     );
